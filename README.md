@@ -1,6 +1,3 @@
-# Time-Series-Analysis
-
-
 # Comparison Between Linear Regression and Logistic Regression
 
 In machine learning, **Linear Regression** and **Logistic Regression** are two commonly used algorithms. Below is a comparison between the two:
@@ -12,7 +9,7 @@ In machine learning, **Linear Regression** and **Logistic Regression** are two c
 | **Equation**                    | \( y = \theta_0 + \theta_1 x \)                               | \( p(x) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 x)}} \) (sigmoid function). |
 | **Decision Boundary**           | Not explicitly defined.                                       | Decision boundary is where the predicted probability is 0.5.    |
 | **Cost Function**               | Mean Squared Error (MSE):                                     | Log Loss (Binary Cross-Entropy):                                |
-|                                 | \( \frac{1}{m} \sum_{i=1}^{m} (y^{(i)} - \hat{y}^{(i)})^2 \)  | \( -\frac{1}{m} \sum_{i=1}^{m} [y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)})] \) |
+|                                 | \( J(\theta) = \frac{1}{m} \sum_{i=1}^{m} (y^{(i)} - \hat{y}^{(i)})^2 \)  | \( J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)})] \) |
 | **Target Variable**             | Continuous value (e.g., height, weight, temperature).          | Binary (0 or 1, yes or no) or multiclass in the case of extensions. |
 | **Assumption about Data**       | Assumes a linear relationship between input variables and output. | Assumes a linear relationship between input variables and the log-odds of the outcome. |
 | **Model Type**                  | Regression model.                                              | Classification model.                                           |
