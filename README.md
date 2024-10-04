@@ -1,46 +1,60 @@
 # Comparison Between Linear Regression and Logistic Regression
 
-In machine learning, **Linear Regression** and **Logistic Regression** are two commonly used algorithms. Below is a comparison between the two:
+In machine learning, **Linear Regression** and **Logistic Regression** are two foundational algorithms used for different types of predictive modeling. Below is a detailed comparison between the two:
 
 | **Aspect**                     | **Linear Regression**                                         | **Logistic Regression**                                        |
-|---------------------------------|---------------------------------------------------------------|----------------------------------------------------------------|
-| **Purpose**                     | Predicts a continuous output (real-valued output).            | Predicts a binary or categorical outcome (classification).      |
-| **Output Range**                | Outputs can range from negative infinity to positive infinity. | Outputs probabilities between 0 and 1 (for binary classification). |
-| **Equation**                    | \( y = \theta_0 + \theta_1 x \)                               | \( p(x) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 x)}} \) (sigmoid function). |
-| **Decision Boundary**           | Not explicitly defined.                                       | Decision boundary is where the predicted probability is 0.5.    |
-| **Cost Function**               | Mean Squared Error (MSE):                                     | Log Loss (Binary Cross-Entropy):                                |
-|                                 | \( J(\theta) = \frac{1}{m} \sum_{i=1}^{m} (y^{(i)} - \hat{y}^{(i)})^2 \)  | \( J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)})] \) |
-| **Target Variable**             | Continuous value (e.g., height, weight, temperature).          | Binary (0 or 1, yes or no) or multiclass in the case of extensions. |
-| **Assumption about Data**       | Assumes a linear relationship between input variables and output. | Assumes a linear relationship between input variables and the log-odds of the outcome. |
-| **Model Type**                  | Regression model.                                              | Classification model.                                           |
-| **Application Example**         | Predicting housing prices based on square footage.             | Predicting whether a tumor is malignant or benign based on size. |
-| **Gradient Function**           | The gradient is linear: \( \theta = \theta - \alpha \nabla J(\theta) \). | The gradient is non-linear due to the sigmoid function: \( \theta = \theta - \alpha \nabla J(\theta) \). |
+|--------------------------------|---------------------------------------------------------------|----------------------------------------------------------------|
+| **Purpose**                    | Predicts a continuous output (real-valued output).            | Predicts a binary or categorical outcome (classification).      |
+| **Output Range**               | Outputs can range from negative infinity to positive infinity. | Outputs probabilities between 0 and 1 (for binary classification). |
+| **Equation**                   | \( y = \theta_0 + \theta_1 x \)                               | \( p(x) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 x)}} \) (sigmoid function). |
+| **Decision Boundary**          | Not explicitly defined.                                       | Decision boundary is where the predicted probability is 0.5.    |
+| **Cost Function**              | Mean Squared Error (MSE):                                     | Log Loss (Binary Cross-Entropy):                                |
+|                                | \[ J(\theta) = \frac{1}{m} \sum_{i=1}^{m} (y^{(i)} - \hat{y}^{(i)})^2 \] | \[ J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} \left[ y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)}) \right] \] |
+| **Target Variable**            | Continuous value (e.g., height, weight, temperature).         | Binary (0 or 1, yes or no) or multiclass in the case of extensions. |
+| **Assumption about Data**      | Assumes a linear relationship between input variables and output. | Assumes a linear relationship between input variables and the log-odds of the outcome. |
+| **Model Type**                 | Regression model.                                             | Classification model.                                           |
+| **Application Example**        | Predicting housing prices based on square footage.            | Predicting whether a tumor is malignant or benign based on size. |
+| **Gradient Function**          | The gradient is linear: \( \theta = \theta - \alpha \nabla J(\theta) \). | The gradient is non-linear due to the sigmoid function: \( \theta = \theta - \alpha \nabla J(\theta) \). |
 | **Interpretation of Coefficients** | Each coefficient represents the change in the output for a one-unit change in the predictor. | Coefficients represent the log-odds of the outcome for a one-unit change in the predictor. |
-| **Examples of Use**             | Predicting stock prices, temperature, etc.                    | Email spam detection, disease prediction (tumor classification), etc. |
+| **Examples of Use**            | Predicting stock prices, temperature, etc.                   | Email spam detection, disease prediction (tumor classification), etc. |
 
-## Key Differences:
+## Key Differences
 
 1. **Purpose**:
    - **Linear Regression** predicts continuous values, such as price, temperature, or height.
    - **Logistic Regression** is used for binary classification, such as determining if an email is spam or not.
 
 2. **Equation**:
-   - **Linear Regression** models a straight line: \( y = \theta_0 + \theta_1 x \).
-   - **Logistic Regression** applies the **sigmoid function**: \( p(x) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 x)}} \), ensuring the output is a probability between 0 and 1.
+   - **Linear Regression** models a straight line:
+     \[
+     y = \theta_0 + \theta_1 x
+     \]
+   - **Logistic Regression** applies the **sigmoid function** to ensure the output is a probability between 0 and 1:
+     \[
+     p(x) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 x)}}
+     \]
 
 3. **Cost Function**:
-   - **Linear Regression** uses **Mean Squared Error (MSE)** to minimize the difference between actual and predicted values.
-   - **Logistic Regression** uses **Log Loss** (cross-entropy loss) to penalize wrong predictions more heavily when they are confident but incorrect.
+   - **Linear Regression** uses **Mean Squared Error (MSE)** to minimize the difference between actual and predicted values:
+     \[
+     J(\theta) = \frac{1}{m} \sum_{i=1}^{m} (y^{(i)} - \hat{y}^{(i)})^2
+     \]
+   - **Logistic Regression** uses **Log Loss** (cross-entropy loss) to penalize wrong predictions more heavily when they are confident but incorrect:
+     \[
+     J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} \left[ y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)}) \right]
+     \]
 
 4. **Decision Boundary**:
-   - In **Logistic Regression**, the decision boundary is where the model’s prediction crosses 0.5 (usually used to distinguish classes).
-   - In **Linear Regression**, there is no decision boundary concept, as the model is designed to predict continuous values, not classifications.
+   - In **Logistic Regression**, the decision boundary is where the model’s prediction probability is 0.5, used to distinguish between classes.
+   - In **Linear Regression**, there is no concept of a decision boundary, as the model is designed to predict continuous values, not classifications.
 
-## Example of Decision Boundary in Logistic Regression:
+## Example of Decision Boundary in Logistic Regression
 
-In **Logistic Regression**, you can find a **decision boundary** where the predicted probability is 0.5. Below is an example of using logistic regression to classify tumors based on their size, and plotting the decision boundary.
+In **Logistic Regression**, the **decision boundary** is the point where the predicted probability of the positive class is 0.5. This boundary separates the input space into regions corresponding to different classes.
 
-### Example Code:
+### Example Code: Logistic Regression with Decision Boundary
+
+Below is an example of using logistic regression to classify tumors based on their size and plotting the decision boundary.
 
 ```python
 import numpy as np
