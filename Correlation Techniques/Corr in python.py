@@ -1,17 +1,19 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
+from statsmodels.api import OLS, add_constant
 
+# Example Data
+X = np.array([1, 2, 3, 4, 5])
+Y = np.array([2, 4, 6, 8, 10])
+
+# Function to calculate Pearson Correlation
+def calculate_pearson_correlation(x, y):
+    pearson_corr, _ = pearsonr(x, y)
+    return pearson_corr
+
+# Function to calculate Cross-Correlation
 def compute_cross_correlation(x, y, max_lag=None):
-    """
-    Compute cross-correlation for given lags.
-    Args:
-        x, y: Input arrays.
-        max_lag: Maximum lag to compute. If None, max_lag = len(x)-1.
-    Returns:
-        Dictionary with lags and corresponding cross-correlation values.
-    """
     n = len(x)
     if max_lag is None:
         max_lag = n - 1
@@ -26,15 +28,8 @@ def compute_cross_correlation(x, y, max_lag=None):
         cross_corr[lag] = num / denom
     return cross_corr
 
+# Function to calculate Autocorrelation
 def compute_autocorrelation(x, max_lag=None):
-    """
-    Compute autocorrelation for given lags.
-    Args:
-        x: Input array.
-        max_lag: Maximum lag to compute. If None, max_lag = len(x)-1.
-    Returns:
-        Dictionary with lags and corresponding autocorrelation values.
-    """
     n = len(x)
     if max_lag is None:
         max_lag = n - 1
@@ -46,68 +41,53 @@ def compute_autocorrelation(x, max_lag=None):
         autocorr[lag] = num / denom
     return autocorr
 
-# Example Data
-X = np.array([1, 2, 3, 4, 5])
-Y = np.array([2, 4, 6, 8, 10])
+# Function to calculate Partial Correlation
+def compute_partial_correlation(x, lag):
+    n = len(x)
+    if lag <= 0 or lag >= n:
+        raise ValueError("Lag must be between 1 and n-1")
+    
+    # Create lagged variables
+    lagged_data = np.column_stack([x[i:n - lag + i] for i in range(lag)])
+    residuals_target = OLS(x[lag:], add_constant(lagged_data[:, :-1])).fit().resid
+    residuals_lagged = OLS(x[:n - lag], add_constant(lagged_data[:, :-1])).fit().resid
+    
+    # Compute Pearson correlation of residuals
+    partial_corr, _ = pearsonr(residuals_target, residuals_lagged)
+    return partial_corr
 
-# Pearson Correlation
-pearson_corr, _ = pearsonr(X, Y)
-print("Pearson Correlation (lag=0):", pearson_corr)
-
-# Cross-Correlation
-cross_corr = compute_cross_correlation(X, Y)
-print("Cross-Correlation:", cross_corr)
-
-# Autocorrelation
-autocorr = compute_autocorrelation(X)
-print("Autocorrelation:", autocorr)
-
-# Visualization
-def plot_correlations(X, Y, cross_corr, autocorr):
-    lags_cross = list(cross_corr.keys())
-    values_cross = list(cross_corr.values())
-    lags_auto = list(autocorr.keys())
-    values_auto = list(autocorr.values())
-
+# Visualization Function
+def plot_correlations(x, y, cross_corr, autocorr):
     plt.figure(figsize=(14, 6))
 
-    # Plot X and Y
-    plt.subplot(1, 3, 1)
-    plt.plot(X, label='X', marker='o')
-    plt.plot(Y, label='Y', marker='o')
-    plt.title("Time Series X and Y")
-    plt.legend()
-
-    # Plot Cross-Correlation
-    plt.subplot(1, 3, 2)
-    plt.stem(lags_cross, values_cross)  # Removed 'use_line_collection' for compatibility
+    # Cross-correlation
+    plt.subplot(1, 2, 1)
+    plt.stem(list(cross_corr.keys()), list(cross_corr.values()), use_line_collection=True)
     plt.title("Cross-Correlation")
     plt.xlabel("Lag")
-    plt.ylabel("Cross-Correlation Value")
+    plt.ylabel("Correlation")
 
-    # Plot Autocorrelation
-    plt.subplot(1, 3, 3)
-    plt.stem(lags_auto, values_auto)  # Removed 'use_line_collection' for compatibility
+    # Autocorrelation
+    plt.subplot(1, 2, 2)
+    plt.stem(list(autocorr.keys()), list(autocorr.values()), use_line_collection=True)
     plt.title("Autocorrelation")
     plt.xlabel("Lag")
-    plt.ylabel("Autocorrelation Value")
+    plt.ylabel("Correlation")
 
     plt.tight_layout()
     plt.show()
 
-# Call the plot function
+# Calculate Correlations
+pearson_corr = calculate_pearson_correlation(X, Y)
+cross_corr = compute_cross_correlation(X, Y)
+autocorr = compute_autocorrelation(X)
+partial_corr = compute_partial_correlation(X, lag=1)
+
+# Display Results
+print(f"Pearson Correlation (lag=0): {pearson_corr}")
+print("Cross-Correlation:", cross_corr)
+print("Autocorrelation:", autocorr)
+print(f"Partial Correlation (lag=1): {partial_corr}")
+
+# Visualize Results
 plot_correlations(X, Y, cross_corr, autocorr)
-
-# User Interaction: Enter Lag
-lag = int(input("Enter the lag value: "))
-if lag in cross_corr:
-    print(f"Cross-Correlation at lag {lag}: {cross_corr[lag]:.4f}")
-else:
-    print(f"Lag {lag} is out of range for Cross-Correlation.")
-
-if lag > 0 and lag in autocorr:
-    print(f"Autocorrelation at lag {lag}: {autocorr[lag]:.4f}")
-elif lag == 0:
-    print(f"Autocorrelation at lag 0 is always 1.0.")
-else:
-    print(f"Lag {lag} is out of range for Autocorrelation.")
