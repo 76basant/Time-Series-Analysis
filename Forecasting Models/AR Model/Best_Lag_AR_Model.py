@@ -1,5 +1,4 @@
 
-
 import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.ar_model import AutoReg
@@ -27,12 +26,30 @@ print("Lags and corresponding PACF values:")
 for lag, value in pacf_lags_values:
     print(f"Lag {lag}: PACF = {value:.4f}")
 
+# Define a threshold for significance (values near zero are insignificant)
+threshold = 0.1  # You can adjust this threshold based on your data
+
+# Find the lag where PACF first falls below the threshold
+best_pacf_lag = None
+for lag, value in pacf_lags_values:
+    if abs(value) < threshold:
+        best_pacf_lag = lag
+        break
+
+if best_pacf_lag is None:
+    print("No significant cut-off found in PACF.")
+else:
+    print(f"The best lag based on PACF threshold of {threshold} is: {best_pacf_lag}")
+
 # Plot PACF to visually inspect the partial correlations
 plt.figure(figsize=(10, 6))
 plt.bar(range(range_Me), pacf_values, color='b')
+plt.axhline(y=threshold, color='r', linestyle='--', label="Threshold")
+plt.axhline(y=-threshold, color='r', linestyle='--')
 plt.xlabel('Lag')
 plt.ylabel('Partial Correlation')
 plt.title('Partial Autocorrelation Function (PACF)')
+plt.legend()
 plt.grid(True)
 plt.show()
 
@@ -40,7 +57,7 @@ plt.show()
 best_aic = float('inf')
 best_p = None
 
-for lag in range(1, range_Me):  # Test lags from 1 to 10
+for lag in range(1, range_Me):  # Test lags from 1 to range_Me-1
     model = AutoReg(data, lags=lag, old_names=False)
     model_fit = model.fit()
     aic = model_fit.aic
@@ -53,7 +70,7 @@ print(f"Best lag (p) based on AIC: {best_p}")
 # Split data into training and testing sets
 train, test = data[:80], data[80:]
 
-# Test different lags
+# Test different lags for cross-validation
 errors = []
 for lag in range(1, range_Me):
     model = AutoReg(train, lags=lag, old_names=False)
