@@ -3,16 +3,12 @@ import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 from statsmodels.api import OLS, add_constant
 
-# Example Data
-X = np.array([1, 2, 3, 4, 5])
-Y = np.array([2, 4, 6, 8, 10])
-
-# Function to calculate Pearson Correlation
+# General Function to calculate Pearson Correlation
 def calculate_pearson_correlation(x, y):
     pearson_corr, _ = pearsonr(x, y)
     return pearson_corr
 
-# Function to calculate Cross-Correlation
+# Function to calculate Cross-Correlation with optional max_lag
 def compute_cross_correlation(x, y, max_lag=None):
     n = len(x)
     if max_lag is None:
@@ -28,7 +24,7 @@ def compute_cross_correlation(x, y, max_lag=None):
         cross_corr[lag] = num / denom
     return cross_corr
 
-# Function to calculate Autocorrelation
+# Function to calculate Autocorrelation with optional max_lag
 def compute_autocorrelation(x, max_lag=None):
     n = len(x)
     if max_lag is None:
@@ -62,14 +58,14 @@ def plot_correlations(x, y, cross_corr, autocorr):
 
     # Cross-correlation
     plt.subplot(1, 2, 1)
-    plt.stem(list(cross_corr.keys()), list(cross_corr.values()), use_line_collection=True)
+    plt.stem(list(cross_corr.keys()), list(cross_corr.values()))  # Removed use_line_collection=True
     plt.title("Cross-Correlation")
     plt.xlabel("Lag")
     plt.ylabel("Correlation")
 
     # Autocorrelation
     plt.subplot(1, 2, 2)
-    plt.stem(list(autocorr.keys()), list(autocorr.values()), use_line_collection=True)
+    plt.stem(list(autocorr.keys()), list(autocorr.values()))  # Removed use_line_collection=True
     plt.title("Autocorrelation")
     plt.xlabel("Lag")
     plt.ylabel("Correlation")
@@ -77,10 +73,14 @@ def plot_correlations(x, y, cross_corr, autocorr):
     plt.tight_layout()
     plt.show()
 
+# General Data Example
+X = np.array([1, 2, 3, 4, 5])
+Y = np.array([2, 4, 6, 8, 10])
+
 # Calculate Correlations
 pearson_corr = calculate_pearson_correlation(X, Y)
-cross_corr = compute_cross_correlation(X, Y)
-autocorr = compute_autocorrelation(X)
+cross_corr = compute_cross_correlation(X, Y, max_lag=2)
+autocorr = compute_autocorrelation(X, max_lag=2)
 partial_corr = compute_partial_correlation(X, lag=1)
 
 # Display Results
